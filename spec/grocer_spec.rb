@@ -173,7 +173,7 @@ describe "Grocer" do
   end
 
   describe "#checkout" do
-
+#=begin
     describe "base case (no clearance, no coupons)" do
       it "calls on #consolidate_cart before calculating the total for one item" do
         cart = [find_item('BEETS')]
@@ -259,9 +259,9 @@ describe "Grocer" do
         expect(checkout(cart, [])).to eq(5.00)
       end
     end
-
+#=end
     describe "coupons:" do
-
+#=begin
       it "considers coupons" do
         cheese = find_item('CHEESE')
         cart = Array.new(3, cheese)
@@ -282,7 +282,6 @@ describe "Grocer" do
         coupons = [find_coupon("BEER")]
         expect(checkout(cart, coupons)).to eq(33.00)
       end
-
       it "only applies coupons that meet minimum amount" do
         beer = find_item('BEER')
         cart = Array.new(3, beer)
@@ -291,7 +290,6 @@ describe "Grocer" do
         expect(checkout(cart, coupons)).to eq(33.00)
       end
     end
-
     describe "clearance:" do
 
       it "applies a 20% discount to items on clearance" do
@@ -315,4 +313,5 @@ describe "Grocer" do
       end
     end
   end
+#=end
 end
