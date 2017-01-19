@@ -1,3 +1,5 @@
+
+
 def consolidate_cart(item_array)
   result={}
   item_array.each do |item_hash|
@@ -12,6 +14,7 @@ def consolidate_cart(item_array)
   end
   result
 end
+
 
 def apply_coupons(cart_hash, coupons_array)
   result={}
