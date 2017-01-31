@@ -1,4 +1,5 @@
-
+=begin
+require 'pry'
 
 def consolidate_cart(item_array)
   result={}
@@ -14,7 +15,6 @@ def consolidate_cart(item_array)
   end
   result
 end
-
 
 def apply_coupons(cart_hash, coupons_array)
   result={}
@@ -69,4 +69,57 @@ else
   final_cost=total_cost
 end
 final_cost
+end
+=end
+require 'pry'
+def consolidate_cart(item_array)
+  cart_hash={}
+  item_array.each do |hash|
+    hash.each do |food, infohash|
+      cart_hash[food]||=infohash
+        cart_hash[food][:count]||=0
+        cart_hash[food][:count]+=1
+    end
+  end
+cart_hash
+end
+
+def apply_coupons(cart_hash,coupons_array)
+  coupons_array.each do |coupon_hash|
+    if cart_hash.keys.include?(coupon_hash[:item])
+        if coupon_hash[:num]<=cart_hash[coupon_hash[:item]][:count]
+          cart_hash[coupon_hash[:item]][:count]-=coupon_hash[:num]
+          cart_hash["#{coupon_hash[:item]} W/COUPON"]||={}
+          cart_hash["#{coupon_hash[:item]} W/COUPON"][:count]||=0
+          #binding.pry
+          cart_hash["#{coupon_hash[:item]} W/COUPON"][:count]+=1
+          cart_hash["#{coupon_hash[:item]} W/COUPON"][:price]||=coupon_hash[:cost]
+          cart_hash["#{coupon_hash[:item]} W/COUPON"][:clearance]=cart_hash[coupon_hash[:item]][:clearance]
+      end
+    end
+  end
+cart_hash
+end
+
+def apply_clearance(cart)
+  cart.each do |item,infohash|
+    if infohash[:clearance]
+      infohash[:price]=(infohash[:price]*0.8).round(2)
+    end
+  end
+cart
+end
+
+def checkout(cart_hash,coupons_array)
+  total=0
+  final_cart=consolidate_cart(cart_hash)
+  apply_coupons(final_cart,coupons_array)
+  last_cart=apply_clearance(final_cart)
+  last_cart.each do |item, infohash|
+    total+=last_cart[item][:price]*last_cart[item][:count]
+  end
+  if total>100
+    total=(total*0.9).round(2)
+  end
+  total
 end
